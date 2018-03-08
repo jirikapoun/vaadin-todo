@@ -6,7 +6,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -17,11 +16,10 @@ import javax.servlet.annotation.WebServlet;
 
 @Theme("todo")
 public class App extends UI {
-  
+
   protected VerticalLayout layout;
   protected TextField      newTaskField;
   protected Button         addTaskButton;
-  protected Label          tasksLabel;
   protected Grid<Task>     taskGrid;
 
   protected HashMap<Integer, Task> tasks;
@@ -31,7 +29,7 @@ public class App extends UI {
     tasks = new HashMap<>();
     Task firstTask = new Task("Add a first task");
     tasks.put(firstTask.getId(), firstTask);
-    
+
     layout = new VerticalLayout();
     setContent(layout);
 
@@ -43,10 +41,6 @@ public class App extends UI {
     addTaskButton.setCaption("Add");
     addTaskButton.addClickListener(event -> addTask());
     layout.addComponent(addTaskButton);
-
-    //tasksLabel = new Label();
-    //tasksLabel.setValue("Tasks");
-    //layout.addComponent(tasksLabel);
 
     taskGrid = new Grid<>();
     taskGrid.setCaption("Tasks");
@@ -64,7 +58,7 @@ public class App extends UI {
     String  text = newTaskField.getValue();
     Task    task = new Task(text);
     Integer id   = task.getId();
-    
+
     tasks.put(id, task);
     taskGrid.getDataProvider().refreshAll();
     Notification.show("Task added", Notification.Type.TRAY_NOTIFICATION);
