@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>cz.jkapoun.todo</groupId>
-  <artifactId>todo</artifactId>
+  <artifactId>vaadin-todo</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>todo</name>
+  <name>vaadin-todo</name>
 
   <prerequisites>
     <maven>3</maven>
@@ -101,9 +101,9 @@
             </goals>
           </execution>
         </executions>
-       <configuration>
-        <runTarget>http://localhost:8080/vaadinproject</runTarget>
-       </configuration>
+        <configuration>
+          <runTarget>http://localhost:8080</runTarget>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -123,15 +123,59 @@
         </configuration>
       </plugin>
 
-      <!-- The Jetty plugin allows us to easily test the development build by
-        running jetty:run on the command line. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.19.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${jetty.plugin.version}</version>
         <configuration>
           <scanIntervalSeconds>2</scanIntervalSeconds>
+          <stopPort>9966</stopPort>
+          <stopKey>testbench-demo</stopKey>
         </configuration>
+        <executions>
+          <execution>
+            <id>start-jetty</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <scanIntervalSeconds>0</scanIntervalSeconds>
+              <stopKey>STOP</stopKey>
+              <stopPort>8866</stopPort>
+            </configuration>
+          </execution>
+          <execution>
+            <id>stop-jetty</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+            <configuration>
+              <stopKey>STOP</stopKey>
+              <stopPort>8866</stopPort>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
