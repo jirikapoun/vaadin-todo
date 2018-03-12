@@ -39,7 +39,7 @@ public class App extends UI {
 
     addTaskButton = new Button();
     addTaskButton.setCaption("Add");
-    addTaskButton.addClickListener(event -> addTask());
+    addTaskButton.addClickListener(event -> addTask(newTaskField.getValue()));
     layout.addComponent(addTaskButton);
 
     taskGrid = new Grid<>();
@@ -54,26 +54,26 @@ public class App extends UI {
     layout.addComponent(taskGrid);
   }
 
-  protected void addTask() {
-    String  text = newTaskField.getValue();
-    Task    task = new Task(text);
-    Integer id   = task.getId();
-
+  protected void addTask(String text) {
+    Task task  = new Task(text);
+    Integer id = task.getId();
     tasks.put(id, task);
+
+    newTaskField.clear();
     taskGrid.getDataProvider().refreshAll();
     Notification.show("Task added", Notification.Type.TRAY_NOTIFICATION);
-    newTaskField.clear();
   }
 
   protected void deleteTask(int id) {
     tasks.remove(id);
+
+    newTaskField.clear();
     taskGrid.getDataProvider().refreshAll();
     Notification.show("Task deleted", Notification.Type.TRAY_NOTIFICATION);
-    newTaskField.clear();
   }
 
-  @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
+  @WebServlet(urlPatterns = "/*", name = "AppServlet", asyncSupported = true)
   @VaadinServletConfiguration(ui = App.class, productionMode = false)
-  public static class MyUIServlet extends VaadinServlet {
+  public static class AppServlet extends VaadinServlet {
   }
 }
