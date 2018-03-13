@@ -3,15 +3,19 @@ package cz.jkapoun.todo.services;
 import cz.jkapoun.todo.model.GeoIP;
 import cz.jkapoun.todo.model.GetGeoIP;
 import cz.jkapoun.todo.model.GetGeoIPResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 
+@Component
 public class GeoIPService extends WebServiceGatewaySupport {
 
   protected static String SERVICE_URL      = "http://www.webservicex.net/geoipservice.asmx";
   protected static String ACTION_BASE_PATH = "http://www.webservicex.net/";
 
+  @Autowired
   public GeoIPService(Jaxb2Marshaller marshaller) {
     super();
     setDefaultUri(SERVICE_URL);

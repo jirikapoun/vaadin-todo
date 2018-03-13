@@ -1,11 +1,15 @@
 package cz.jkapoun.todo.services;
 
 import cz.jkapoun.todo.model.GeoIP;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class LoggingService {
 
   protected GeoIPService geoIPService;
 
+  @Autowired
   public LoggingService(GeoIPService geoIPService) {
     this.geoIPService = geoIPService;
   }

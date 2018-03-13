@@ -1,5 +1,6 @@
 package cz.jkapoun.todo.views;
 
+import com.vaadin.spring.annotation.UIScope;
 import cz.jkapoun.todo.model.Task;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
@@ -10,7 +11,11 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ComponentRenderer;
 import java.util.Collection;
 import java.util.function.Consumer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
+@UIScope
 public class TodoView extends CustomComponent {
 
   protected VerticalLayout   layout;
@@ -21,6 +26,7 @@ public class TodoView extends CustomComponent {
   protected Consumer<String> addTaskHandler;
   protected Consumer<Task>   deleteTaskHandler;
 
+  @Autowired
   public TodoView() {
     initializeLayout();
   }

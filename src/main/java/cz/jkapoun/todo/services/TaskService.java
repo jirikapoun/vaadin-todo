@@ -1,10 +1,14 @@
 package cz.jkapoun.todo.services;
 
+import com.vaadin.spring.annotation.VaadinSessionScope;
 import cz.jkapoun.todo.model.Task;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
+@Component
+@VaadinSessionScope
 public class TaskService {
 
   protected Map<Integer, Task> tasks;
