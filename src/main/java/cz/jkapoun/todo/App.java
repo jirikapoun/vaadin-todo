@@ -1,16 +1,13 @@
 package cz.jkapoun.todo;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 import cz.jkapoun.todo.presenters.TodoPresenter;
 import cz.jkapoun.todo.services.GeoIPService;
 import cz.jkapoun.todo.services.LoggingService;
 import cz.jkapoun.todo.services.TaskService;
 import cz.jkapoun.todo.views.TodoView;
-import javax.servlet.annotation.WebServlet;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 @Theme("todo")
@@ -44,8 +41,4 @@ public class App extends UI {
     setContent(todoView);
   }
 
-  @WebServlet(urlPatterns = "/*", name = "AppServlet", asyncSupported = true)
-  @VaadinServletConfiguration(ui = App.class, productionMode = false)
-  public static class AppServlet extends VaadinServlet {
-  }
 }
