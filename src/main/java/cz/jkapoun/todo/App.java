@@ -4,72 +4,44 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.renderers.ComponentRenderer;
-import java.util.HashMap;
+import cz.jkapoun.todo.presenters.TodoPresenter;
+import cz.jkapoun.todo.services.GeoIPService;
+import cz.jkapoun.todo.services.LoggingService;
+import cz.jkapoun.todo.services.TaskService;
+import cz.jkapoun.todo.views.TodoView;
 import javax.servlet.annotation.WebServlet;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 @Theme("todo")
 public class App extends UI {
 
-  protected VerticalLayout layout;
-  protected TextField      newTaskField;
-  protected Button         addTaskButton;
-  protected Grid<Task>     taskGrid;
+  protected GeoIPService   geoIPService;
+  protected LoggingService loggingService;
+  protected TaskService    taskService;
 
-  protected HashMap<Integer, Task> tasks;
+  protected TodoView       todoView;
+  protected TodoPresenter  todoPresenter;
+
+  public App() {
+    Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+    marshaller.setContextPath("cz.jkapoun.todo.model");
+
+    geoIPService   = new GeoIPService(marshaller);
+    loggingService = new LoggingService(geoIPService);
+    taskService    = new TaskService();
+
+    todoView       = new TodoView();
+    todoPresenter  = new TodoPresenter(taskService, todoView);
+  }
 
   @Override
   protected void init(VaadinRequest vaadinRequest) {
-    tasks = new HashMap<>();
-    Task firstTask = new Task("Add a first task");
-    tasks.put(firstTask.getId(), firstTask);
-
-    layout = new VerticalLayout();
-    setContent(layout);
-
-    newTaskField = new TextField();
-    newTaskField.setPlaceholder("Enter new task here");
-    layout.addComponent(newTaskField);
-
-    addTaskButton = new Button();
-    addTaskButton.setCaption("Add");
-    addTaskButton.addClickListener(event -> addTask(newTaskField.getValue()));
-    layout.addComponent(addTaskButton);
-
-    taskGrid = new Grid<>();
-    taskGrid.setCaption("Tasks");
-    taskGrid.addColumn(Task::getId)
-            .setCaption("ID");
-    taskGrid.addColumn(Task::getText)
-            .setCaption("Text");
-    taskGrid.addColumn(task -> new Button("×", event -> deleteTask(task.getId())), new ComponentRenderer())
-            .setCaption("Delete");
-    taskGrid.setItems(tasks.values());
-    layout.addComponent(taskGrid);
-  }
-
-  protected void addTask(String text) {
-    Task task  = new Task(text);
-    Integer id = task.getId();
-    tasks.put(id, task);
-
-    newTaskField.clear();
-    taskGrid.getDataProvider().refreshAll();
-    Notification.show("Task added", Notification.Type.TRAY_NOTIFICATION);
-  }
-
-  protected void deleteTask(int id) {
-    tasks.remove(id);
-
-    newTaskField.clear();
-    taskGrid.getDataProvider().refreshAll();
-    Notification.show("Task deleted", Notification.Type.TRAY_NOTIFICATION);
+    String ip = vaadinRequest.getRemoteAddr();
+    loggingService.logIP(ip);
+    
+    taskService.addTask("Add a first task");
+    setContent(todoView);
   }
 
   @WebServlet(urlPatterns = "/*", name = "AppServlet", asyncSupported = true)
