@@ -7,6 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 
+/**
+ * Repository of the Task objects.
+ * Manages the creation of Task objects, stores them and provides them on
+ * demand. Also ensures that IDs of the Tasks are unique.
+ * By using @VaadinSessionScope annotation, TaskService objects are scoped to
+ * the Vaadin session. This ensures the persistence of the Tasks on page reload.
+ * 
+ * @author Jiří Kapoun <jiri.kapoun@profinit.eu>
+ * @see    Task
+ */
 @Component
 @VaadinSessionScope
 public class TaskService {
@@ -34,6 +44,11 @@ public class TaskService {
     return tasks.get(id);
   }
 
+  /**
+   * Returns a collection containing all the stored tasks.
+   * Changes of the tasks (additions, edits, removals) are automatically
+   * propagated to this collection.
+   */
   public Collection<Task> getTasks() {
     return tasks.values();
   }

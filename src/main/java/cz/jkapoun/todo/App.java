@@ -11,6 +11,10 @@ import cz.jkapoun.todo.services.TaskService;
 import cz.jkapoun.todo.views.TodoView;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Main UI of the application.
+ * @author Jiří Kapoun <jiri.kapoun@profinit.eu>
+ */
 @SpringUI
 @Theme("todo")
 public class App extends UI {
@@ -32,10 +36,13 @@ public class App extends UI {
     this.todoPresenter  = todoPresenter;
   }
 
+  /**
+   * Instructs LoggingService to log user's IP address and loads TodoView.
+   */
   @Override
   protected void init(VaadinRequest vaadinRequest) {
     String ip = vaadinRequest.getRemoteAddr();
-    loggingService.logIP(ip);
+    loggingService.logRequest(ip);
     
     taskService.addTask("Add a first task");
     setContent(todoView);

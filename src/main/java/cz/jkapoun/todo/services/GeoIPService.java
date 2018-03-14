@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 
+/**
+ * Sample SOAP client consuming GeoIP service using Spring WS.
+ * 
+ * @author Jiří Kapoun <jiri.kapoun@profinit.eu>
+ */
 @Component
 public class GeoIPService extends WebServiceGatewaySupport {
 
@@ -23,6 +28,11 @@ public class GeoIPService extends WebServiceGatewaySupport {
     setUnmarshaller(marshaller);
   }
 
+  /**
+   * Looks up the origin country of the given IP address.
+   * Returns an object of the GeoIP class, which is auto-generated from the WSDL
+   * specification.
+   */
   public GeoIP getGeoIP(String ipAddress) {
     GetGeoIP request = new GetGeoIP();
     request.setIPAddress(ipAddress);
