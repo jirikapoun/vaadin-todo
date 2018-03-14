@@ -21,3 +21,9 @@ For running the TestBench tests, you also need:
 
 * Google Chrome
 * ChromeDriver for Selenium
+
+### Configuration
+
+Before you build the application, you need to either disable TestBench tests (in
+case you don't want to use them) or correctly set the ChromeDriver path. In that
+case, please see `src/test/java/cz/jkapoun/todo/tests/AppIT.java` file.
