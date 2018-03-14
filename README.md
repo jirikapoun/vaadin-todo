@@ -3,6 +3,10 @@
 This app demonstrates the use of two major Java frameworks, Vaadin and Spring,
 seamlessly together.
 
+## Architecture overview
+
+![Architecture diagram](https://raw.githubusercontent.com/kapoun/vaadin-todo/master/src/site/resources/todo-architecture.png)
+
 ## Running the application
 
 ### Prerequisites
