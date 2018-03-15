@@ -1,4 +1,4 @@
-# ToDo - a Vaadin-Spring sample application
+# ToDo – a Vaadin-Spring sample application
 
 This app demonstrates the use of two major Java frameworks, Vaadin and Spring,
 seamlessly together.
@@ -6,6 +6,16 @@ seamlessly together.
 ## Architecture overview
 
 ![Architecture diagram](https://raw.githubusercontent.com/kapoun/vaadin-todo/master/src/site/resources/todo-architecture.png)
+
+The application follows the Model-View-Presenter pattern. Data model is
+represented by two classes – Task, which holds data of a task, and TaskService,
+which acts as a task repository. There is only one View-Presenter pair, TaskView
+and TaskPresenter.
+
+To demonstrate the use of Spring Web Services library, the application
+implements one more feature – the IP address of a user is looked up in GeoIP
+database and the user's country is logged into standard output. Logging is
+provided by LoggingService, GeoIP lookup by GeoIPService.
 
 ## Running the application
 
