@@ -2,7 +2,7 @@ package cz.jkapoun.todo.presenters;
 
 import com.vaadin.spring.annotation.UIScope;
 import cz.jkapoun.todo.model.Task;
-import cz.jkapoun.todo.services.TaskService;
+import cz.jkapoun.todo.model.TaskRepository;
 import cz.jkapoun.todo.views.TodoView;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,11 @@ import org.springframework.stereotype.Component;
 @UIScope
 public class TodoPresenter {
 
-  protected TaskService taskService;
+  protected TaskRepository taskService;
   protected TodoView    todoView;
 
   @Autowired
-  public TodoPresenter(TaskService taskService, TodoView todoView) {
+  public TodoPresenter(TaskRepository taskService, TodoView todoView) {
     this.taskService = taskService;
     this.todoView    = todoView;
 

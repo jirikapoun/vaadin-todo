@@ -7,7 +7,7 @@ import com.vaadin.ui.UI;
 import cz.jkapoun.todo.presenters.TodoPresenter;
 import cz.jkapoun.todo.services.GeoIPService;
 import cz.jkapoun.todo.services.LoggingService;
-import cz.jkapoun.todo.services.TaskService;
+import cz.jkapoun.todo.model.TaskRepository;
 import cz.jkapoun.todo.views.TodoView;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,13 +22,13 @@ public class App extends UI {
 
   protected GeoIPService   geoIPService;
   protected LoggingService loggingService;
-  protected TaskService    taskService;
+  protected TaskRepository    taskService;
 
   protected TodoView       todoView;
   protected TodoPresenter  todoPresenter;
 
   @Autowired
-  public App(GeoIPService geoIPService, LoggingService loggingService, TaskService taskService, TodoView todoView, TodoPresenter todoPresenter) {
+  public App(GeoIPService geoIPService, LoggingService loggingService, TaskRepository taskService, TodoView todoView, TodoPresenter todoPresenter) {
     this.geoIPService   = geoIPService;
     this.loggingService = loggingService;
     this.taskService    = taskService;

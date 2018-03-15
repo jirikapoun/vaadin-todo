@@ -8,7 +8,7 @@ seamlessly together.
 ![Architecture diagram](https://raw.githubusercontent.com/kapoun/vaadin-todo/master/src/site/resources/todo-architecture.png)
 
 The application follows the Model-View-Presenter pattern. Data model is
-represented by two classes – Task, which holds data of a task, and TaskService,
+represented by two classes – Task, which holds data of a task, and TaskRepository,
 which acts as a task repository. There is only one View-Presenter pair, TaskView
 and TaskPresenter.
 

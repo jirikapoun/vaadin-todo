@@ -1,7 +1,6 @@
-package cz.jkapoun.todo.services;
+package cz.jkapoun.todo.model;
 
 import com.vaadin.spring.annotation.VaadinSessionScope;
-import cz.jkapoun.todo.model.Task;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Component;
  * Repository of the Task objects.
  * Manages the creation of Task objects, stores them and provides them on
  * demand. Also ensures that IDs of tasks are unique.
- * By using @VaadinSessionScope annotation, TaskService objects are scoped to
+ * By using @VaadinSessionScope annotation, TaskRepository objects are scoped to
  * the Vaadin session. This ensures tasks are persisted on page reload.
  * 
  * @author Jiří Kapoun <jiri.kapoun@profinit.eu>
@@ -19,12 +18,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @VaadinSessionScope
-public class TaskService {
+public class TaskRepository {
 
   protected Map<Integer, Task> tasks;
   protected int                nextId;
 
-  public TaskService() {
+  public TaskRepository() {
     tasks  = new HashMap<>();
     nextId = 1;
   }
