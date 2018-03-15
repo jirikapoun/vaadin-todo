@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Main UI of the application.
+ * 
  * @author Jiří Kapoun <jiri.kapoun@profinit.eu>
  */
 @SpringUI
@@ -44,7 +45,6 @@ public class App extends UI {
     String ip = vaadinRequest.getRemoteAddr();
     loggingService.logRequest(ip);
     
-    taskService.addTask("Add a first task");
     setContent(todoView);
   }
 

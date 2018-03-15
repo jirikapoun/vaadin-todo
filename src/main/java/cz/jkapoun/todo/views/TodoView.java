@@ -1,14 +1,19 @@
 package cz.jkapoun.todo.views;
 
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.spring.annotation.UIScope;
 import cz.jkapoun.todo.model.Task;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ComponentRenderer;
+import com.vaadin.ui.themes.ValoTheme;
 import cz.jkapoun.todo.presenters.TodoPresenter;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -27,20 +32,26 @@ import org.springframework.stereotype.Component;
 @UIScope
 public class TodoView extends CustomComponent {
 
-  protected VerticalLayout   layout;
-  protected TextField        newTaskField;
-  protected Button           addTaskButton;
-  protected Grid<Task>       taskGrid;
+  protected VerticalLayout       layout;
+  protected HorizontalLayout     sublayout;
+  protected Label                headerLabel;
+  protected TextField            newTaskField;
+  protected Button               addTaskButton;
+  protected Grid<Task>           taskGrid;
+  protected Button.ClickShortcut addTaskShortcut;
 
   protected Consumer<String> addTaskHandler;
   protected Consumer<Task>   deleteTaskHandler;
 
   @Autowired
   public TodoView() {
-    layout        = new VerticalLayout();
-    newTaskField  = new TextField();
-    addTaskButton = new Button();
-    taskGrid      = new Grid<>();
+    layout          = new VerticalLayout();
+    sublayout       = new HorizontalLayout();
+    headerLabel     = new Label();
+    newTaskField    = new TextField();
+    addTaskButton   = new Button();
+    taskGrid        = new Grid<>();
+    addTaskShortcut = new Button.ClickShortcut(addTaskButton, ShortcutAction.KeyCode.ENTER);
 
     initializeLayout();
   }
@@ -84,7 +95,12 @@ public class TodoView extends CustomComponent {
   }
 
   protected void initializeLayout() {
+    headerLabel.setValue("ToDo");
+    headerLabel.addStyleName(ValoTheme.LABEL_H1);
+
     newTaskField.setPlaceholder("Enter new task here");
+    newTaskField.addFocusListener(event -> newTaskField.addShortcutListener(addTaskShortcut));
+    newTaskField.addBlurListener (event -> newTaskField.removeShortcutListener(addTaskShortcut));
     
     addTaskButton.setCaption("Add");
     addTaskButton.addClickListener(event -> onAddTask());
@@ -95,11 +111,17 @@ public class TodoView extends CustomComponent {
     taskGrid.addColumn(Task::getText)
             .setCaption("Text");
     taskGrid.addColumn(task -> new Button("×", event -> onDeleteTask(task)), new ComponentRenderer())
-            .setCaption("Delete");
+            .setCaption("Delete")
+            .setSortable(false);
 
-    layout.addComponent(newTaskField);
-    layout.addComponent(addTaskButton);
+    sublayout.setMargin(false);
+    sublayout.addComponent(newTaskField);
+    sublayout.addComponent(addTaskButton);
+
+    layout.addComponent(headerLabel);
+    layout.addComponent(sublayout);
     layout.addComponent(taskGrid);
+
     setCompositionRoot(layout);
   }
 

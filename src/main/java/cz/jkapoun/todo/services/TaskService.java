@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 /**
  * Repository of the Task objects.
  * Manages the creation of Task objects, stores them and provides them on
- * demand. Also ensures that IDs of the Tasks are unique.
+ * demand. Also ensures that IDs of tasks are unique.
  * By using @VaadinSessionScope annotation, TaskService objects are scoped to
- * the Vaadin session. This ensures the persistence of the Tasks on page reload.
+ * the Vaadin session. This ensures tasks are persisted on page reload.
  * 
  * @author Jiří Kapoun <jiri.kapoun@profinit.eu>
  * @see    Task
