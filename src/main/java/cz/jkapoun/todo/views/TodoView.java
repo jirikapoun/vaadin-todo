@@ -99,6 +99,7 @@ public class TodoView extends CustomComponent {
     headerLabel.addStyleName(ValoTheme.LABEL_H1);
 
     newTaskField.setPlaceholder("Enter new task here");
+    newTaskField.setWidth("100%");
     newTaskField.addFocusListener(event -> newTaskField.addShortcutListener(addTaskShortcut));
     newTaskField.addBlurListener (event -> newTaskField.removeShortcutListener(addTaskShortcut));
     
@@ -106,17 +107,25 @@ public class TodoView extends CustomComponent {
     addTaskButton.addClickListener(event -> onAddTask());
 
     taskGrid.setCaption("Tasks");
+    taskGrid.setWidth("100%");
     taskGrid.addColumn(Task::getId)
-            .setCaption("ID");
+            .setCaption("#")
+            .setExpandRatio(0)
+            .setResizable(false);
     taskGrid.addColumn(Task::getText)
-            .setCaption("Text");
+            .setCaption("Text")
+            .setExpandRatio(1);
     taskGrid.addColumn(task -> new Button("×", event -> onDeleteTask(task)), new ComponentRenderer())
             .setCaption("Delete")
+            .setExpandRatio(0)
+            .setResizable(false)
             .setSortable(false);
 
     sublayout.setMargin(false);
+    sublayout.setWidth("100%");
     sublayout.addComponent(newTaskField);
     sublayout.addComponent(addTaskButton);
+    sublayout.setExpandRatio(newTaskField, 1);
 
     layout.addComponent(headerLabel);
     layout.addComponent(sublayout);
