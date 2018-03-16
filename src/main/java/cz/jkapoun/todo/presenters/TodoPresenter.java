@@ -30,6 +30,7 @@ public class TodoPresenter {
 
     todoView.setAddTaskHandler(this::handleAddTask);
     todoView.setDeleteTaskHandler(this::handleDeleteTask);
+    todoView.init();
 
     Collection<Task> tasks = taskService.getTasks();
     todoView.setTasks(tasks);

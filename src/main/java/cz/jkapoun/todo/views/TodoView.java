@@ -18,7 +18,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import cz.jkapoun.todo.presenters.TodoPresenter;
 import java.util.Collection;
 import java.util.function.Consumer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,23 +37,60 @@ public class TodoView extends CustomComponent {
   protected Label                headerLabel;
   protected TextField            newTaskField;
   protected Button               addTaskButton;
-  protected Button.ClickShortcut addTaskShortcut;
   protected Grid<Task>           taskGrid;
+  protected Button.ClickShortcut addTaskShortcut;
 
   protected Consumer<String> addTaskHandler;
   protected Consumer<Task>   deleteTaskHandler;
 
-  @Autowired
-  public TodoView() {
-    layout          = new VerticalLayout();
-    sublayout       = new HorizontalLayout();
-    headerLabel     = new Label();
-    newTaskField    = new TextField();
-    addTaskButton   = new Button();
-    taskGrid        = new Grid<>();
+  public void init() {
     addTaskShortcut = new Button.ClickShortcut(addTaskButton, ShortcutAction.KeyCode.ENTER);
 
-    initializeLayout();
+    headerLabel = new Label();
+    headerLabel.setValue("ToDo");
+    headerLabel.addStyleName(ValoTheme.LABEL_H1);
+
+    newTaskField = new TextField();
+    newTaskField.setPlaceholder("Enter new task here");
+    newTaskField.setWidth("100%");
+    newTaskField.addFocusListener(event -> newTaskField.addShortcutListener(addTaskShortcut));
+    newTaskField.addBlurListener (event -> newTaskField.removeShortcutListener(addTaskShortcut));
+    
+    addTaskButton = new Button();
+    addTaskButton.setCaption("Add");
+    addTaskButton.addClickListener(event -> onAddTask());
+
+    taskGrid = new Grid<>();
+    taskGrid.setCaption("Tasks");
+    taskGrid.setWidth("100%");
+    taskGrid.addColumn(Task::getId)
+            .setCaption("#")
+            .setExpandRatio(0)
+            .setResizable(false);
+    taskGrid.addColumn(Task::getText)
+            .setCaption("Text")
+            .setExpandRatio(1)
+            .setEditorComponent(new TextField(), Task::setText);
+    taskGrid.addColumn(task -> new Button(VaadinIcons.TRASH, event -> onDeleteTask(task)), new ComponentRenderer())
+            .setCaption("Delete")
+            .setExpandRatio(0)
+            .setResizable(false)
+            .setSortable(false);
+    taskGrid.getEditor().setEnabled(true);
+
+    sublayout = new HorizontalLayout();
+    sublayout.setMargin(false);
+    sublayout.setWidth("100%");
+    sublayout.addComponent(newTaskField);
+    sublayout.addComponent(addTaskButton);
+    sublayout.setExpandRatio(newTaskField, 1);
+
+    layout = new VerticalLayout();
+    layout.addComponent(headerLabel);
+    layout.addComponent(sublayout);
+    layout.addComponent(taskGrid);
+
+    setCompositionRoot(layout);
   }
 
   /**
@@ -97,46 +133,6 @@ public class TodoView extends CustomComponent {
     Notification notification = new Notification("Task deleted", Notification.Type.TRAY_NOTIFICATION);
     notification.setPosition(Position.TOP_CENTER);
     notification.show(this.getUI().getPage());
-  }
-
-  protected void initializeLayout() {
-    headerLabel.setValue("ToDo");
-    headerLabel.addStyleName(ValoTheme.LABEL_H1);
-
-    newTaskField.setPlaceholder("Enter new task here");
-    newTaskField.setWidth("100%");
-    newTaskField.addFocusListener(event -> newTaskField.addShortcutListener(addTaskShortcut));
-    newTaskField.addBlurListener (event -> newTaskField.removeShortcutListener(addTaskShortcut));
-    
-    addTaskButton.setCaption("Add");
-    addTaskButton.addClickListener(event -> onAddTask());
-
-    taskGrid.setCaption("Tasks");
-    taskGrid.setWidth("100%");
-    taskGrid.addColumn(Task::getId)
-            .setCaption("#")
-            .setExpandRatio(0)
-            .setResizable(false);
-    taskGrid.addColumn(Task::getText)
-            .setCaption("Text")
-            .setExpandRatio(1);
-    taskGrid.addColumn(task -> new Button("×", event -> onDeleteTask(task)), new ComponentRenderer())
-            .setCaption("Delete")
-            .setExpandRatio(0)
-            .setResizable(false)
-            .setSortable(false);
-
-    sublayout.setMargin(false);
-    sublayout.setWidth("100%");
-    sublayout.addComponent(newTaskField);
-    sublayout.addComponent(addTaskButton);
-    sublayout.setExpandRatio(newTaskField, 1);
-
-    layout.addComponent(headerLabel);
-    layout.addComponent(sublayout);
-    layout.addComponent(taskGrid);
-
-    setCompositionRoot(layout);
   }
 
   protected void onAddTask() {
