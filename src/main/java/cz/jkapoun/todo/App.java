@@ -4,10 +4,10 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.UI;
-import cz.jkapoun.todo.presenters.TodoPresenter;
-import cz.jkapoun.todo.services.GeoIPService;
-import cz.jkapoun.todo.services.LoggingService;
 import cz.jkapoun.todo.model.TaskRepository;
+import cz.jkapoun.todo.presenters.TodoPresenter;
+import cz.jkapoun.todo.services.LoggingService;
+import cz.jkapoun.todo.services.StdoutLoggingService;
 import cz.jkapoun.todo.views.TodoView;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,25 +20,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Theme("todo")
 public class App extends UI {
 
-  protected GeoIPService   geoIPService;
-  protected LoggingService loggingService;
-  protected TaskRepository    taskService;
-
   protected TodoView       todoView;
   protected TodoPresenter  todoPresenter;
+  protected LoggingService loggingService;
 
   @Autowired
-  public App(GeoIPService geoIPService, LoggingService loggingService, TaskRepository taskService, TodoView todoView, TodoPresenter todoPresenter) {
-    this.geoIPService   = geoIPService;
+  public App(StdoutLoggingService loggingService, TaskRepository taskService, TodoView todoView, TodoPresenter todoPresenter) {
     this.loggingService = loggingService;
-    this.taskService    = taskService;
-
     this.todoView       = todoView;
     this.todoPresenter  = todoPresenter;
   }
 
   /**
-   * Instructs LoggingService to log user's IP address and loads TodoView.
+   * Instructs StdoutLoggingService to log user's IP address and loads TodoView.
    */
   @Override
   protected void init(VaadinRequest vaadinRequest) {
