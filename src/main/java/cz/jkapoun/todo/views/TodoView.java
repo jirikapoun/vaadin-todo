@@ -1,7 +1,8 @@
 package cz.jkapoun.todo.views;
 
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.event.ShortcutListener;
+import com.vaadin.icons.VaadinIcons;
+import com.vaadin.shared.Position;
 import com.vaadin.spring.annotation.UIScope;
 import cz.jkapoun.todo.model.Task;
 import com.vaadin.ui.Button;
@@ -37,8 +38,8 @@ public class TodoView extends CustomComponent {
   protected Label                headerLabel;
   protected TextField            newTaskField;
   protected Button               addTaskButton;
-  protected Grid<Task>           taskGrid;
   protected Button.ClickShortcut addTaskShortcut;
+  protected Grid<Task>           taskGrid;
 
   protected Consumer<String> addTaskHandler;
   protected Consumer<Task>   deleteTaskHandler;
@@ -83,7 +84,9 @@ public class TodoView extends CustomComponent {
   public void afterTaskAdded() {
     taskGrid.getDataProvider().refreshAll();
     newTaskField.clear();
-    Notification.show("Task added", Notification.Type.TRAY_NOTIFICATION);
+    Notification notification = new Notification("Task added", Notification.Type.TRAY_NOTIFICATION);
+    notification.setPosition(Position.TOP_CENTER);
+    notification.show(this.getUI().getPage());
   }
 
   /**
@@ -91,7 +94,9 @@ public class TodoView extends CustomComponent {
    */
   public void afterTaskDeleted() {
     taskGrid.getDataProvider().refreshAll();
-    Notification.show("Task deleted", Notification.Type.TRAY_NOTIFICATION);
+    Notification notification = new Notification("Task deleted", Notification.Type.TRAY_NOTIFICATION);
+    notification.setPosition(Position.TOP_CENTER);
+    notification.show(this.getUI().getPage());
   }
 
   protected void initializeLayout() {
