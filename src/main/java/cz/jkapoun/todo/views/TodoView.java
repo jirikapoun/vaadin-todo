@@ -4,7 +4,6 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.Position;
 import com.vaadin.spring.annotation.UIScope;
-import cz.jkapoun.todo.model.Task;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
@@ -15,6 +14,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.themes.ValoTheme;
+import cz.jkapoun.todo.model.Task;
 import cz.jkapoun.todo.presenters.TodoPresenter;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -114,23 +114,16 @@ public class TodoView extends CustomComponent {
     deleteTaskHandler = handler;
   }
 
-  /**
-   * Should be called by presenter after handling the "Add task" event.
-   */
-  public void afterTaskAdded() {
+  public void refreshData() {
     taskGrid.getDataProvider().refreshAll();
-    newTaskField.clear();
-    Notification notification = new Notification("Task added", Notification.Type.TRAY_NOTIFICATION);
-    notification.setPosition(Position.TOP_CENTER);
-    notification.show(this.getUI().getPage());
   }
 
-  /**
-   * Should be called by presenter after handling the "Delete task" event.
-   */
-  public void afterTaskDeleted() {
-    taskGrid.getDataProvider().refreshAll();
-    Notification notification = new Notification("Task deleted", Notification.Type.TRAY_NOTIFICATION);
+  public void clearField() {
+    newTaskField.clear();
+  }
+
+  public void showNotification(String text) {
+    Notification notification = new Notification(text, Notification.Type.TRAY_NOTIFICATION);
     notification.setPosition(Position.TOP_CENTER);
     notification.show(this.getUI().getPage());
   }

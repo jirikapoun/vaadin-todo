@@ -38,12 +38,15 @@ public class TodoPresenter {
 
   protected void handleAddTask(String text) {
     taskService.addTask(text);
-    todoView.afterTaskAdded();
+    todoView.clearField();
+    todoView.refreshData();
+    todoView.showNotification("Task added");
   }
 
   protected void handleDeleteTask(Task task) {
     int id = task.getId();
     taskService.deleteTask(id);
-    todoView.afterTaskDeleted();
+    todoView.refreshData();
+    todoView.showNotification("Task deleted");
   }
 }
