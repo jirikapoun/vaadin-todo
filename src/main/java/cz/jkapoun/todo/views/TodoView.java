@@ -48,8 +48,6 @@ public class TodoView extends CustomComponent {
   }
 
   public void init() {
-    addTaskShortcut = new Button.ClickShortcut(addTaskButton, ShortcutAction.KeyCode.ENTER);
-
     headerLabel = new Label();
     headerLabel.setValue("ToDo");
     headerLabel.addStyleName(ValoTheme.LABEL_H1);
@@ -57,12 +55,14 @@ public class TodoView extends CustomComponent {
     newTaskField = new TextField();
     newTaskField.setPlaceholder("Enter new task here");
     newTaskField.setWidth("100%");
-    newTaskField.addFocusListener(event -> newTaskField.addShortcutListener(addTaskShortcut));
-    newTaskField.addBlurListener (event -> newTaskField.removeShortcutListener(addTaskShortcut));
     
     addTaskButton = new Button();
     addTaskButton.setCaption("Add");
     addTaskButton.addClickListener(event -> onAddTask());
+    
+    addTaskShortcut = new Button.ClickShortcut(addTaskButton, ShortcutAction.KeyCode.ENTER);
+    newTaskField.addFocusListener(event -> newTaskField.addShortcutListener   (addTaskShortcut));
+    newTaskField.addBlurListener (event -> newTaskField.removeShortcutListener(addTaskShortcut));
 
     taskGrid = new Grid<>();
     taskGrid.setCaption("Tasks");
