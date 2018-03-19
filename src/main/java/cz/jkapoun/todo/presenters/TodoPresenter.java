@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @UIScope
-public class TodoPresenter {
+public class TodoPresenter implements TodoView.TodoViewListener {
 
   protected TaskRepository taskService;
   protected TodoView    todoView;
@@ -28,22 +28,23 @@ public class TodoPresenter {
     this.taskService = taskService;
     this.todoView    = todoView;
 
-    todoView.setAddTaskHandler(this::handleAddTask);
-    todoView.setDeleteTaskHandler(this::handleDeleteTask);
-    todoView.init();
-
     Collection<Task> tasks = taskService.getTasks();
-    todoView.setTasks(tasks);
+
+    todoView.addListener(this);
+    todoView.init();
+    todoView.displayTasks(tasks);
   }
 
-  protected void handleAddTask(String text) {
+  @Override
+  public void handleAddTask(String text) {
     taskService.addTask(text);
     todoView.clearField();
     todoView.refreshData();
     todoView.showNotification("Task added");
   }
 
-  protected void handleDeleteTask(Task task) {
+  @Override
+  public void handleDeleteTask(Task task) {
     int id = task.getId();
     taskService.deleteTask(id);
     todoView.refreshData();

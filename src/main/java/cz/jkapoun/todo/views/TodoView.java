@@ -16,8 +16,9 @@ import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import cz.jkapoun.todo.model.Task;
 import cz.jkapoun.todo.presenters.TodoPresenter;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Consumer;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,8 +41,11 @@ public class TodoView extends CustomComponent {
   protected Grid<Task>           taskGrid;
   protected Button.ClickShortcut addTaskShortcut;
 
-  protected Consumer<String> addTaskHandler;
-  protected Consumer<Task>   deleteTaskHandler;
+  protected List<TodoViewListener> listeners;
+
+  public TodoView(){
+    listeners = new ArrayList<>();
+  }
 
   public void init() {
     addTaskShortcut = new Button.ClickShortcut(addTaskButton, ShortcutAction.KeyCode.ENTER);
@@ -96,22 +100,15 @@ public class TodoView extends CustomComponent {
   /**
    * Sets what tasks will be shown in the task list.
    */
-  public void setTasks(Collection<Task> tasks) {
+  public void displayTasks(Collection<Task> tasks) {
     taskGrid.setItems(tasks);
-  }
-
-  /**
-   * Enables the presenter to get notified on "Add task" button click.
-   */
-  public void setAddTaskHandler(Consumer<String> handler) {
-    addTaskHandler = handler;
   }
 
   /**
    * Enables the presenter to get notified on "Delete task" button click.
    */
-  public void setDeleteTaskHandler(Consumer<Task> handler) {
-    deleteTaskHandler = handler;
+  public void addListener(TodoViewListener listener) {
+    listeners.add(listener);
   }
 
   public void refreshData() {
@@ -129,13 +126,20 @@ public class TodoView extends CustomComponent {
   }
 
   protected void onAddTask() {
-    if (addTaskHandler != null)
-      addTaskHandler.accept(newTaskField.getValue());
+    for (TodoViewListener listener : listeners)
+      listener.handleAddTask(newTaskField.getValue());
   }
 
   protected void onDeleteTask(Task task) {
-    if (deleteTaskHandler != null)
-      deleteTaskHandler.accept(task);
+    for (TodoViewListener listener : listeners)
+      listener.handleDeleteTask(task);
+  }
+
+  public interface TodoViewListener {
+    
+    void handleAddTask(String text);
+    void handleDeleteTask(Task task);
+    
   }
 
 }
